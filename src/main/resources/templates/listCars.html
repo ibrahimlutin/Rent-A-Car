@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Araç Listesi</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}">
+    <style>
+        #fullscreenImage {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        #fullscreenImg {
+            max-width: 90%;
+            max-height: 90%;
+            border: 5px solid white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="common/header :: header"></div>
+<div th:replace="common/navigation :: navigation"></div>
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="text-center mb-4">Araç Listesi</h1>
+            <form th:action="@{/search-cars}" method="get" class="mb-3 d-flex justify-content-center">
+                <input type="text" name="keyword" class="form-control w-50" placeholder="Araç modeline göre ara...">
+                <button type="submit" class="btn btn-primary ms-2">Ara</button>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-striped table-bordered align-middle">
+                    <thead class="table-dark text-center">
+                    <tr>
+                        <th>Görsel</th>
+                        <th>Araç ID</th>
+                        <th>Model</th>
+                        <th>Renk</th>
+                        <th>Kapasite</th>
+                        <th>Durum</th>
+                        <th>Sürücü ID</th>
+                        <th>Kiralanma Tarihi</th>
+                        <th>İşlem</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="car, iterStat : ${cars}">
+                        <td class="text-center">
+                            <img th:src="@{/car-image/{id}(id=${car.id})}"
+                                 alt="Resim Yok"
+                                 width="100" height="60"
+                                 class="rounded border shadow-sm"
+                                 style="cursor: pointer;"
+                                 onclick="openFullscreen(this.src)" />
+                        </td>
+                        <td th:text="${car.id}" class="text-center"></td>
+                        <td th:text="${car.model}" class="text-center"></td>
+                        <td th:text="${car.color}" class="text-center"></td>
+                        <td th:text="${car.seatingCapacity}" class="text-center"></td>
+                        <td class="text-center">
+                            <span th:if="${car.availableForBooking}" class="badge bg-success">Müsait</span>
+                            <span th:unless="${car.availableForBooking}" class="badge bg-danger">Dolu</span>
+                        </td>
+
+                        <!-- ✅ Booking bilgisi -->
+                        <td class="text-center" th:text="${bookings[iterStat.index]?.driverId ?: '—'}"></td>
+                        <td class="text-center" th:text="${bookings[iterStat.index]?.bookingDate ?: '—'}"></td>
+
+                        <td class="text-center">
+                            <a th:href="@{/delete-car(id=${car.id})}" class="btn btn-sm btn-danger">Sil</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                <a th:href="@{/add-car}" class="btn btn-primary btn-lg">Yeni Araç Ekle</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="fullscreenImage" onclick="closeFullscreen()">
+    <img id="fullscreenImg" src="" alt="Büyük Resim">
+</div>
+
+<script>
+    function openFullscreen(src) {
+        document.getElementById('fullscreenImg').src = src;
+        document.getElementById('fullscreenImage').style.display = 'flex';
+    }
+
+    function closeFullscreen() {
+        document.getElementById('fullscreenImage').style.display = 'none';
+    }
+</script>
+
+<div th:replace="common/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Müsait Araçlar</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}">
+    <style>
+        /* ✅ Büyütülmüş görseli göstermek için */
+        #fullscreenImage {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #fullscreenImg {
+            max-width: 90%;
+            max-height: 90%;
+            border: 5px solid white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header ve Navigation -->
+<div th:replace="common/header :: header"></div>
+<div th:replace="common/navigation :: navigation"></div>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Müsait Araçlar</h1>
+
+    <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-dark">
+        <tr>
+            <th>Resim</th>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Renk</th>
+            <th>Kapasite</th>
+            <th>Kirala</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="car : ${cars}">
+            <td class="text-center">
+                <img th:src="@{/car-image/{id}(id=${car.id})}"
+                     alt="Resim Yok"
+                     width="100" height="60"
+                     class="rounded border shadow-sm"
+                     style="cursor: pointer;"
+                     onclick="openFullscreen(this.src)" />
+            </td>
+            <td th:text="${car.id}"></td>
+            <td th:text="${car.model}"></td>
+            <td th:text="${car.color}"></td>
+            <td th:text="${car.seatingCapacity}"></td>
+            <td>
+                <a th:href="@{/car-request-form(carId=${car.id})}" class="btn btn-warning">Kirala</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ✅ Büyütülmüş resim ekranı -->
+<div id="fullscreenImage" onclick="closeFullscreen()">
+    <img id="fullscreenImg" src="" alt="Büyük Resim">
+</div>
+
+<!-- ✅ JavaScript: Görseli aç-kapat -->
+<script>
+    function openFullscreen(src) {
+        document.getElementById('fullscreenImg').src = src;
+        document.getElementById('fullscreenImage').style.display = 'flex';
+    }
+
+    function closeFullscreen() {
+        document.getElementById('fullscreenImage').style.display = 'none';
+    }
+</script>
+
+<!-- Footer -->
+<div th:replace="common/footer :: footer"></div>
+
+<!-- Bootstrap JS (modal dışında kullanılıyorsa gerekebilir) -->
+<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Giriş Yap</title>
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+  <style>
+    body {
+      background: url('/images/gazi.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .login-box h2 {
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    .login-box form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .login-box input[type="text"],
+    .login-box input[type="password"] {
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background-color: #343a40 ;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .login-box button:hover {
+      background-color: #343a40 ;
+    }
+
+    .login-box .error,
+    .login-box .logout {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .logout {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+<div class="login-box">
+  <h2>Giriş Yap</h2>
+  <form th:action="@{/login}" method="post">
+    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+    <input type="password" name="password" placeholder="Şifre" required>
+    <button type="submit">Giriş Yap</button>
+
+    <div th:if="${param.error}" class="error">
+      Hatalı kullanıcı adı veya şifre!
+    </div>
+    <div th:if="${param.logout}" class="logout">
+      Başarıyla çıkış yaptınız.
+    </div>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Sürücüler</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}">
+</head>
+<body>
+
+<!-- Header ve Navigation -->
+<div th:replace="common/header :: header"></div>
+<div th:replace="common/navigation :: navigation"></div>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Aktif Kiralanmış Araçlar</h2>
+    <form th:action="@{/search-bookings}" method="get" class="d-flex mb-3 justify-content-end">
+        <input type="text" name="username" placeholder="Kullanıcı adı ile ara" class="form-control w-25 me-2"/>
+        <button type="submit" class="btn btn-outline-primary">Ara</button>
+    </form>
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover text-center align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>Booking ID</th>
+                <th>Araç ID</th>
+                <th>Sürücü ID</th>
+                <th>Kullanıcı Adı</th>
+                <th>Kiralama Tarihi</th>
+                <th>İşlem</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${bookings}">
+                <td th:text="${booking.id}"></td>
+                <td th:text="${booking.carId}"></td>
+                <td th:text="${booking.driverId}"></td>
+                <td th:text="${booking.username}"></td>
+                <td th:text="${booking.bookingDate}"></td>
+                <td>
+                    <a th:href="@{/complete-booking(bookingId=${booking.id})}"
+                       class="btn btn-success btn-sm">Kiralama Tamamlandı</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
